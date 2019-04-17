@@ -20,7 +20,44 @@ end
 
 function select_cleric()
     player.class = "cleric"
-    hp = flr(rnd(5))+1 + calc_bonus(player.con)
+    player.hp = flr(rnd(5))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_fighter()
+    player.class = "fighter"
+    player.hp = flr(rnd(7))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_magic_user()
+    player.class = "magic-user"
+    player.hp = flr(rnd(3))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_thief()
+    player.class = "thief"
+    player.hp = flr(rnd(3))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_elf()
+    player.class = "elf"
+    player.hp = flr(rnd(5))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_dwarf()
+    player.class = "dwarf"
+    player.hp = flr(rnd(7))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
+end
+
+function select_halfling()
+    player.class = "halfling"
+    player.hp = flr(rnd(5))+1 + calc_bonus(player.con)
+    player.max_hp = player.hp
 end
 
 function set_classes()
@@ -32,27 +69,27 @@ function set_classes()
       },
       { 
         display = "fighter",
-        func = select_cleric
+        func = select_fighter
       },
       { 
         display = "magic-user",
-        func = select_cleric
+        func = select_magic_user
       },
       { 
         display = "thief",
-        func = select_cleric
+        func = select_thief
       },
       { 
         display = "elf",
-        func = select_cleric
+        func = select_elf
       },
       { 
         display = "dwarf",
-        func = select_cleric
+        func = select_dwarf
       },
       { 
         display = "halfling",
-        func = select_cleric
+        func = select_halfling
       }
     }
 end
@@ -72,6 +109,9 @@ function sheet_draw()
     tx = 22
     color(13)
     rect(0,0,127,127,13)
+    print ("name ", 2,ty)
+    print (player.name, tx,ty)
+    ty +=iy
     print ("clss ", 2,ty)
     print (player.class, tx,ty)
     ty +=iy
@@ -108,13 +148,14 @@ function sheet_draw()
 end
 
 function create_character()
+
     player.str = roll3d6()
     player.int = roll3d6()
     player.wis = roll3d6()
     player.dex = roll3d6()
     player.con = roll3d6()
     player.chr = roll3d6()
-    player.name =""
+    player.name ="-"
     player.class = "none"
     player.armour = "none"
     player.weapon = "none"
