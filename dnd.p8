@@ -8,13 +8,17 @@ state = 0
 selected = 1
 function _init( ... )
     create_character()
-    set_classes()
+ 
 end
 
 function _update()
     if (btnp(1)) create_character()
     if (btnp(4)) state = 1
-    if (state == 1) select_options()
+    if (state == 1) then 
+      set_classes()
+      select_options()
+
+    end
 
 end
 
@@ -78,20 +82,35 @@ function set_classes()
       { 
         display = "thief",
         func = select_thief
-      },
-      { 
+      }
+
+    }
+
+    if (player.str >8 and player.int >8 ) then
+      elf = { 
         display = "elf",
         func = select_elf
-      },
-      { 
+      }
+      add (options, elf)
+    end
+    if(player.con > 8) then
+      dwarf = 
+      {
         display = "dwarf",
         func = select_dwarf
-      },
-      { 
+      }
+      add(options, dwarf)
+    end
+
+    if (player.dex > 8 and player.con > 9) then
+      halfing = 
+      {
         display = "halfling",
         func = select_halfling
       }
-    }
+      add(options,halfing)
+    end
+    
 end
 
 
