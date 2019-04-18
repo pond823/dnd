@@ -4,20 +4,25 @@ __lua__
 
 player = {}
 options = {}
+classes = {}
+
 state = 0
 selected = 1
 function _init( ... )
+    printh("initialising", "log.txt", true)
     create_character()
- 
+    setup_classes()
+    
 end
 
 function _update()
     if (btnp(1)) create_character()
-    if (btnp(4)) state = 1
-    if (state == 1) then 
+    if (btnp(4) and state != 1) then 
+      state = 1
       set_classes()
+    end
+    if (state == 1) then
       select_options()
-
     end
 
 end
@@ -66,25 +71,9 @@ end
 
 function set_classes()
 
-    options = {
-    { 
-        display = "cleric",
-        func = select_cleric
-      },
-      { 
-        display = "fighter",
-        func = select_fighter
-      },
-      { 
-        display = "magic-user",
-        func = select_magic_user
-      },
-      { 
-        display = "thief",
-        func = select_thief
-      }
-
-    }
+    setup_classes()
+    options = classes
+    log(#options)
 
     if (player.str >8 and player.int >8 ) then
       elf = { 
@@ -126,8 +115,9 @@ function sheet_draw()
     ty = 2
     iy = 7
     tx = 22
-    color(13)
-    rect(0,0,127,127,13)
+    color(11)
+    rect(0,0,127,127,11)
+
     print ("name ", 2,ty)
     print (player.name, tx,ty)
     ty +=iy
@@ -158,6 +148,9 @@ function sheet_draw()
     print ("chr ", 2,ty)
     print (player.chr.." "..string_bonus(player.chr).." reaction adjustment", tx,ty)
     ty +=iy
+    print ("gold ", 2,ty)
+    print (player.gold, tx,ty)
+    ty +=iy
     print ("arm ", 2,ty)
     print (player.armour, tx,ty)
     ty +=iy
@@ -181,6 +174,8 @@ function create_character()
     player.hp = 0
     player.max_hp = 0
     player.ac = 9
+    player.gold = roll3d6() * 10
+    player.name = random_name()
 end
 
 function string_bonus(stat) 
@@ -216,8 +211,6 @@ end
 --
 function draw_options()
  
-    print(options)
-
     if (#options>0) then
      
       oy = (64 - (#options * 6)/2)
@@ -235,7 +228,6 @@ function draw_options()
     end
 end
   
-  
   function select_options()
   
     if (btnp(2)) selected -=1 
@@ -249,7 +241,7 @@ end
       
     if (btnp(5)) then
       options[selected].func()
-      state = 2
+      clear_options()
     end
     -- flush_btn4 used to debounce btnp(4) as the first press is still in buffer  
     if (btnp(4) and flush_btn4 == 0) clear_options() -- cancel
@@ -260,4 +252,40 @@ end
   function clear_options()
     state = 0
     options={}
+  end
+
+  function setup_classes() 
+    classes = {
+      { 
+        display = "cleric",
+        func = select_cleric
+      },
+      { 
+        display = "fighter",
+        func = select_fighter
+      },
+      { 
+        display = "magic-user",
+        func = select_magic_user
+      },
+      { 
+        display = "thief",
+        func = select_thief
+      }
+    }
+  end
+
+  function log(msg)
+    printh(time()..":"..msg, "log.txt")
+  end
+
+  function random_name()
+    local a = {"cug", "ara", "gan", "myra","cral","dorn","faf", "nar", "voth", "kha", "ez", "xyzal", "oso", "quan"}
+    local b = {"", "","el", "go", "du", "kar", "vog", "hurn", "id","hi", "ick", "gor", "um","os"}
+    local c = {" the clever","rn","lf"," of shadows", " the marvellous", " stormspear", "es", "", " deadlord", " the thirster", " havocbringer" }
+    local i1 = flr(rnd(#a-1))+1
+    local i2 = flr(rnd(#b-1))+1
+    local i3 = flr(rnd(#c-1))+1
+    local s = a[i1]..b[i2]..c[i3]
+    return s
   end
